@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/*
+  Color system — "Scan Blue," anchored to the calibration-blue glow of a
+  dental intraoral scanner display (the same digital-precision imagery the
+  copy already leans on). Built in OKLCH: hue bends cyan-ward in the tints
+  and violet-ward in the shades rather than holding one flat angle, and
+  chroma peaks mid-ramp instead of staying constant — that bend is what
+  keeps it from reading as Tailwind's stock blue-600. The neutral ramp
+  carries a small trace of the same hue (cool/clinical register) instead of
+  a true R=G=B grey. Overriding Tailwind's own `blue`/`slate` palettes here
+  means every `bg-blue-600`, `text-slate-500` etc. across every component
+  already picks this up — no per-component class changes needed.
+*/
+@theme {
+  --color-blue-50: #eaf8fb;
+  --color-blue-100: #d0eef9;
+  --color-blue-200: #acdcf5;
+  --color-blue-300: #82c3ee;
+  --color-blue-400: #56a5e7;
+  --color-blue-500: #2f82d9;
+  --color-blue-600: #2161c2;
+  --color-blue-700: #2348a1;
+  --color-blue-800: #21327a;
+  --color-blue-900: #1b2257;
+
+  --color-slate-50: #f6f9fb;
+  --color-slate-100: #ebeff2;
+  --color-slate-200: #dadfe3;
+  --color-slate-300: #bfc5ca;
+  --color-slate-400: #81878d;
+  --color-slate-500: #696f77;
+  --color-slate-600: #4d535a;
+  --color-slate-700: #363b41;
+  --color-slate-800: #25292e;
+  --color-slate-900: #14161a;
+
+  --font-display: var(--font-display), ui-serif, Georgia, serif;
+}
+
+:root {
+  --bg-base: #f6f9fb;
+  --bg-alt: #ebeff2;
+  --accent-blue: #2161c2;
+  --text-primary: #14161a;
+  --text-secondary: #696f77;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+/*
+  Display type — Fraunces, paired against Geist Sans across classification
+  (serif display + neutral grotesque) rather than one face carrying every
+  job. Used only on section headlines and the hero, so the jump from body
+  to display actually reads as a jump. Negative tracking and a tight
+  line-height at this size are optical corrections the framework default
+  doesn't make on its own.
+*/
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variation-settings: "SOFT" 20, "WONK" 0;
+}
+
+/* Soft blue glow behind the hero headline — subtle, not neon */
+.text-glow {
+  text-shadow: 0 0 24px rgba(33, 97, 194, 0.18);
+}
+
+/* Clean white card, soft elevation, thin blue-gray border */
+.glow-card {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(20, 22, 26, 0.04), 0 10px 30px rgba(20, 22, 26, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.glow-card:hover {
+  border-color: rgba(33, 97, 194, 0.35);
+  box-shadow: 0 1px 2px rgba(20, 22, 26, 0.04), 0 20px 45px rgba(33, 97, 194, 0.14);
+  transform: translateY(-4px);
+}
+
+/* Flatter sibling of .glow-card — a hairline border doing the grouping job
+   instead of a shadow, for content that shouldn't compete for elevation. */
+.line-card {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: 0.75rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.line-card:hover {
+  border-color: var(--color-blue-300);
+  background: var(--color-blue-50);
+}
+
+/* Reusable primary button */
+.btn-glow {
+  background: var(--accent-blue);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-glow:hover {
+  background: var(--color-blue-700);
+  box-shadow: 0 12px 28px rgba(33, 97, 194, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Elements animated in by GSAP ScrollTrigger start hidden to avoid a flash of
+   unstyled content before JS hydrates and takes over */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+::selection {
+  background: rgba(33, 97, 194, 0.18);
+}
+
+/* Cohesive cool color-grade so any stock photo reads as one system,
+   without crushing it into the near-black treatment a dark theme needs. */
+.photo-duo {
+  filter: saturate(0.85) contrast(1.04) brightness(1.02);
+}
+
+/* No `position` here on purpose — Tailwind's `relative`/`absolute` utility
+   at each call site decides that per usage (some are absolute full-bleed
+   backdrops, some are relative in-flow frames). Because this file is
+   unlayered CSS, a `position` declared here would beat Tailwind's own
+   utility layer regardless of source order and silently collapse whichever
+   usage needed `absolute` to zero height. */
+.photo-frame {
+  overflow: hidden;
+}
+
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(246, 249, 251, 0) 45%,
+    rgba(246, 249, 251, 0.96) 100%
+  );
+  pointer-events: none;
+}
+
+/* Full-bleed background photos (About section) fade to white for legible
+   dark text on top, instead of the bottom-only card fade above. */
+.photo-frame-wash::after {
+  background: linear-gradient(
+    180deg,
+    rgba(246, 249, 251, 0.55) 0%,
+    rgba(246, 249, 251, 0.92) 100%
+  );
+}
+
+/* Infinite horizontal marquee — trust badges + testimonials ride this */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Flip/turn card — used on treatment cards */
+.flip-card {
+  perspective: 1600px;
+}
+
+.flip-card-inner {
+  position: relative;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card:focus-within .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-face-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
+/* Slow idle float — team cards, badges */
+@keyframes float-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-badge {
+  animation: float-idle 3.2s ease-in-out infinite;
+}
+
+/* Respect users who've asked for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .float-badge {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
