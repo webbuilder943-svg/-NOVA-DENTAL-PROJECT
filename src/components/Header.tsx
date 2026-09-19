@@ -60,7 +60,7 @@ export default function Header({ onBookClick }: HeaderProps) {
       <div
         className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-[padding,background-color,border-color] duration-300 ${
           scrolled
-            ? "border-b border-blue-100 bg-white/85 py-2.5 backdrop-blur-xl"
+            ? "border-b border-blue-100 bg-white py-2.5"
             : "border-b border-transparent bg-transparent py-5"
         }`}
       >
@@ -120,6 +120,29 @@ export default function Header({ onBookClick }: HeaderProps) {
         >
           {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
+      </div>
+
+      {/* Same trust signals as the desktop pills above, just collapsed into
+          one line — these were xl:flex-only before, which meant 99% of
+          actual visitors (on phones) never saw them at all. */}
+      <div className="flex items-center justify-center gap-4 border-b border-slate-100 bg-white py-1.5 text-[11px] xl:hidden">
+        <span className="flex items-center gap-1.5 text-slate-600">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+          </span>
+          Dr. Kapoor Available Now
+        </span>
+        <span className="text-slate-300">·</span>
+        <a
+          href="https://www.google.com/search?q=Nova+Dental+Koramangala+reviews"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 font-medium text-slate-700"
+        >
+          <Star size={11} className="fill-blue-500 text-blue-500" />
+          4.9 Google Reviews
+        </a>
       </div>
 
       {mobileOpen && (

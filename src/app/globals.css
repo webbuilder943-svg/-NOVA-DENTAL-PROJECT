@@ -52,12 +52,19 @@
 
 html {
   scroll-behavior: smooth;
+  /* Set directly on html, not just body — overflow-x on body alone doesn't
+     reliably propagate to the actual scrolling viewport in every case, and
+     this is the element that needs to own it. */
+  overflow-x: hidden;
 }
 
 body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-sans, system-ui, sans-serif);
+  /* Backstop against page-level horizontal scroll — a marquee or any
+     future full-bleed element shouldn't be able to widen the page. */
+  overflow-x: hidden;
 }
 
 /*
@@ -206,7 +213,8 @@ body {
 }
 
 .flip-card:hover .flip-card-inner,
-.flip-card:focus-within .flip-card-inner {
+.flip-card:focus-within .flip-card-inner,
+.flip-card-inner.is-flipped {
   transform: rotateY(180deg);
 }
 

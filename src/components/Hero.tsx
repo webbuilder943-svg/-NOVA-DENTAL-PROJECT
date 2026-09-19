@@ -14,7 +14,7 @@ export default function Hero({ onBookClick }: HeroProps) {
   return (
     <section
       ref={ref}
-      className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center gap-12 overflow-hidden px-6 pt-32 pb-20 lg:flex-row lg:gap-8 lg:pt-24"
+      className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center gap-12 overflow-hidden px-6 pt-36 pb-20 lg:flex-row lg:gap-8 lg:pt-24"
     >
       {/* A crisp, solid shape standing in for the generic blurred gradient
           blob — bleeds off the top-right edge, with a hairline ring

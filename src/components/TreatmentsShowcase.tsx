@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { AlignJustify, Sparkle, Scan } from "lucide-react";
@@ -46,6 +47,11 @@ const treatments = [
 
 export default function TreatmentsShowcase() {
   const ref = useScrollReveal<HTMLDivElement>();
+  // Hover drives the flip on desktop (CSS-only, see .flip-card:hover in
+  // globals.css); touch devices have no hover state at all, so tapping
+  // needs its own explicit toggle or the back face is simply unreachable
+  // on a phone — which is the primary device here.
+  const [flipped, setFlipped] = useState<Record<string, boolean>>({});
 
   return (
     <section id="treatments" ref={ref} className="mx-auto max-w-7xl px-6 py-24">
@@ -61,8 +67,18 @@ export default function TreatmentsShowcase() {
 
       <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {treatments.map(({ icon: Icon, title, description, detail, photo, scene }) => (
-          <div key={title} className="reveal flip-card h-96">
-            <div className="flip-card-inner h-full">
+          <button
+            key={title}
+            type="button"
+            onClick={() =>
+              setFlipped((prev) => ({ ...prev, [title]: !prev[title] }))
+            }
+            aria-label={`${title} — tap to see what's included`}
+            className="reveal flip-card h-96 w-full text-left"
+          >
+            <div
+              className={`flip-card-inner h-full ${flipped[title] ? "is-flipped" : ""}`}
+            >
               {/* Front */}
               <div className="flip-face glow-card absolute inset-0 flex flex-col overflow-hidden p-0">
                 <div className="photo-frame relative h-44 w-full shrink-0 bg-blue-50">
@@ -89,7 +105,7 @@ export default function TreatmentsShowcase() {
                     {description}
                   </p>
                   <span className="mt-auto pt-4 text-xs text-slate-400">
-                    Hover to see what&apos;s included
+                    Tap to see what&apos;s included
                   </span>
                 </div>
               </div>
@@ -105,7 +121,7 @@ export default function TreatmentsShowcase() {
                 </p>
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </section>
